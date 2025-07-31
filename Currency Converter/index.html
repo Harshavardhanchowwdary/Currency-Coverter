@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Currency Converter</title>
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Google Fonts - Outfit -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #f8f9fa;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 600px;
+      margin: auto;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-label {
+      font-weight: 600;
+    }
+
+    .message-card {
+      margin-top: 20px;
+      padding: 15px;
+      border-left: 5px solid #198754;
+      background-color: #e9f7ef;
+      border-radius: 8px;
+    }
+
+    .flag {
+      margin-right: 6px;
+    }
+
+    .btn-convert {
+      font-weight: 600;
+    }
+
+    @media (max-width: 576px) {
+      h3 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card bg-white">
+    <h3 class="text-center mb-4">🌍 Currency Converter</h3>
+
+    <div class="mb-3">
+      <label for="fromCurrency" class="form-label">From Currency</label>
+      <select id="fromCurrency" class="form-select">
+        <option value="USD">🇺🇸 USD - US Dollar</option>
+        <option value="EUR">🇪🇺 EUR - Euro</option>
+        <option value="INR">🇮🇳 INR - Indian Rupee</option>
+        <option value="JPY">🇯🇵 JPY - Japanese Yen</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="toCurrency" class="form-label">To Currency</label>
+      <select id="toCurrency" class="form-select">
+        <option value="USD">🇺🇸 USD - US Dollar</option>
+        <option value="EUR">🇪🇺 EUR - Euro</option>
+        <option value="INR">🇮🇳 INR - Indian Rupee</option>
+        <option value="JPY">🇯🇵 JPY - Japanese Yen</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="amount" class="form-label">Amount</label>
+      <input type="number" id="amount" class="form-control" placeholder="Enter amount" />
+    </div>
+
+    <div class="d-grid">
+      <button onclick="convertCurrency()" class="btn btn-primary btn-convert">Convert</button>
+    </div>
+
+    <div id="messageCard" class="message-card mt-4 d-none">
+      <h5 id="convertedAmount">$0.00</h5>
+      <p id="conversionMsg" class="mb-0"></p>
+    </div>
+  </div>
+
+  <script>
+    // Sample static conversion rates
+    const exchangeRates = {
+      USD: { USD: 1, EUR: 0.85, INR: 82, JPY: 140 },
+      EUR: { USD: 1.18, EUR: 1, INR: 96, JPY: 160 },
+      INR: { USD: 0.012, EUR: 0.010, INR: 1, JPY: 1.7 },
+      JPY: { USD: 0.007, EUR: 0.0063, INR: 0.59, JPY: 1 }
+    };
+
+    function convertCurrency() {
+      const fromCurrency = document.getElementById("fromCurrency").value;
+      const toCurrency = document.getElementById("toCurrency").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+
+      const messageCard = document.getElementById("messageCard");
+      const convertedAmount = document.getElementById("convertedAmount");
+      const conversionMsg = document.getElementById("conversionMsg");
+
+      if (isNaN(amount) || amount <= 0) {
+        messageCard.classList.remove("d-none");
+        messageCard.classList.add("border-start", "border-danger", "bg-light");
+        convertedAmount.innerText = "⚠️ Invalid Amount";
+        conversionMsg.innerText = "Please enter a valid positive number.";
+        return;
+      }
+
+      const rate = exchangeRates[fromCurrency][toCurrency];
+      const result = amount * rate;
+
+      messageCard.classList.remove("d-none", "border-danger", "bg-light");
+      messageCard.classList.add("border-success", "bg-white");
+      convertedAmount.innerText = `${getCurrencySymbol(toCurrency)} ${result.toFixed(2)}`;
+      conversionMsg.innerText = `Converted from ${fromCurrency} to ${toCurrency} at rate ${rate}`;
+    }
+
+    function getCurrencySymbol(currency) {
+      switch (currency) {
+        case "USD": return "$";
+        case "EUR": return "€";
+        case "INR": return "₹";
+        case "JPY": return "¥";
+        default: return "";
+      }
+    }
+  </script>
+
+</body>
+</html>
